@@ -6,15 +6,18 @@ indent() {
 
 echo "-----> Install ffmpeg"
 BUILD_DIR=$1
-DOWNLOAD_URL="https://github.com/Litterfeldt/heroku-buildpack-ffmpeg-x264-fdk_aac/blob/master/binaries/ffmpeg_w_libs.tar.gz?raw=true"
+VENDOR="vendor"
+DOWNLOAD_URL="https://github.com/Litterfeldt/heroku-buildpack-ffmpeg-x264-fdk_aac/blob/master/binaries/ffmpeg_bundle.tar.gz?raw=true"
 
 echo "DOWNLOAD_URL = " $DOWNLOAD_URL | indent
 
 cd $BUILD_DIR
+mkdir -p $VENDOR
+cd $VENDOR
 curl -L --silent $DOWNLOAD_URL | tar xv
 
 echo "exporting PATH and LIBRARY_PATH" | indent
 PROFILE_PATH="$BUILD_DIR/.profile.d/ffmpeg.sh"
 mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:$HOME/vendor/ffmpeg/bin:$HOME/vendor/libs/bin"' >> $PROFILE_PATH
-echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/vendor/ffmpeg/lib:$HOME/vendor/libs/lib"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:$HOME/vendor/ffmpeg_bundle/ffmpeg/bin:$HOME/vendor/ffmpeg_bundle/libs/bin"' >> $PROFILE_PATH
+echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/vendor/ffmpeg_bundle/ffmpeg/lib:$HOME/vendor/ffmpeg_bundle/libs/lib"' >> $PROFILE_PATH
